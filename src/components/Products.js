@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext"; // make sure this context exists
@@ -18,13 +18,27 @@ const products = [
   { id: 12, name: "Cotton Pant", img: "https://img.freepik.com/premium-photo/3d-mens-fashion-formal-male-pant-mockup-white-background_1174662-7494.jpg", price: "₹899" },
 ];
 
-const Products = () => {
+const Products = ({ searchTerm }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart(); // from context
 
+  const [filteredProducts, setFilteredProducts] = useState(products);
+
+  useEffect(() => {
+    if (searchTerm) {
+      setFilteredProducts(
+        products.filter((product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [searchTerm]);
+
   const handleAddToCart = (product) => {
-    addToCart(product);          // 1. Add product to cart
-    navigate("/cart");           // 2. Redirect to Cart page
+    addToCart(product); // 1. Add product to cart
+    navigate("/cart"); // 2. Redirect to Cart page
   };
 
   return (
@@ -34,31 +48,35 @@ const Products = () => {
         <p>Your Destination for Affordable Fashion</p>
       </header>
       <div className="row">
-        {products.map((product) => (
-          <div key={product.id} className="col-md-3 col-sm-6 mb-4">
-            <div className="card h-100">
-              <img
-                src={product.img}
-                alt={product.name}
-                className="card-img-top product-img m-3 img-hover"
-              />
-              <div className="card-body text-center">
-                <h5 className="card-title">{product.name}</h5>
-                <p className="card-text">{product.price}</p>
-                <div className="d-flex justify-content-between">
-                  <button className="btn btn-grad">Buy Now</button>
-                  <button
-                    className="btn btn-add"
-                    aria-label={`Add ${product.name} to Cart`}
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    Add to Cart
-                  </button>
+        {filteredProducts.length === 0 ? (
+          <p>No products found</p>
+        ) : (
+          filteredProducts.map((product) => (
+            <div key={product.id} className="col-md-3 col-sm-6 mb-4">
+              <div className="card h-100 position-relative">
+                <img
+                  src={product.img}
+                  alt={product.name}
+                  className="card-img-top product-img m-3 img-hover"
+                />
+                <div className="card-body text-center">
+                  <h5 className="card-title">{product.name}</h5>
+                  <p className="card-text">{product.price}</p>
+                  <div className="d-flex justify-content-between">
+                    <button className="btn btn-grad">Buy Now</button>
+                    <button
+                      className="btn btn-add"
+                      aria-label={`Add ${product.name} to Cart`}
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

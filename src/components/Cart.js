@@ -7,8 +7,10 @@ const Cart = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="container py-4">
+    <div>
+      <header className="bg-dark text-white text-center p-4 Cart-h ">            
       <h2 className="text-center mb-4">🛒 Your Cart</h2>
+      </header>
 
       {cartItems.length === 0 ? (
         <p className="text-center">Your cart is empty.</p>
@@ -17,7 +19,7 @@ const Cart = () => {
           <div className="row">
             {cartItems.map((item) => (
               <div key={item.id} className="col-md-4 mb-4">
-                <div className="card h-100 shadow-sm ">
+                <div className="card h-100 shadow-sm m-4 ">
                   <img
                     src={item.img}
                     alt={item.name}

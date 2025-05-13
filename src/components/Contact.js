@@ -1,9 +1,58 @@
-
-import React from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import '../App.css';
 
 const ContactPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append('access_key', 'a5e99171-32f2-4140-98b8-fda2eb2f93d7'); // Your Web3Forms key
+    data.append('name', formData.name);
+    data.append('email', formData.email);
+    data.append('message', formData.message);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (response.ok) {
+        setShowSuccess(true);
+        setShowError(false);
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setShowError(true);
+        setShowSuccess(false);
+      }
+    } catch (error) {
+      setShowError(true);
+      setShowSuccess(false);
+    }
+
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+      setShowSuccess(false);
+      setShowError(false);
+    }, 5000);
+  };
+
   return (
     <div id="contact">
       <header id="contact-h" className="bg-dark text-white text-center py-4">
@@ -13,59 +62,70 @@ const ContactPage = () => {
 
       <Container className="py-5">
         <Row className="align-items-center g-4">
-          {/* Contact Form Section */}
           <Col md={6}>
             <div className="p-4 shadow rounded bg-light">
               <h3 className="mb-3">Get In Touch</h3>
-              <p className="text-muted">Have questions or feedback? Fill out the form and we’ll get back to you as soon as possible.</p>
-              <Form>
+              <p className="text-muted">
+                Have questions or feedback? Fill out the form and we’ll get back to you as soon as possible.
+              </p>
+
+              {/* Success & Error Messages */}
+              {showSuccess && <Alert variant="success">✅ Message sent successfully!</Alert>}
+              {showError && <Alert variant="danger">❌ Failed to send message. Please try again.</Alert>}
+
+              <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formName" className="mb-3">
                   <Form.Label>Name</Form.Label>
-                  <Form.Control 
-                    type="text" 
-                    placeholder="Enter your name" 
-                    required 
-                    aria-label="Enter your full name" 
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    placeholder="Enter your name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
                   />
                 </Form.Group>
 
                 <Form.Group controlId="formEmail" className="mb-3">
                   <Form.Label>Email</Form.Label>
-                  <Form.Control 
-                    type="email" 
-                    placeholder="Enter your email" 
-                    required 
-                    aria-label="Enter your email address" 
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
                   />
                 </Form.Group>
 
                 <Form.Group controlId="formMessage" className="mb-3">
                   <Form.Label>Message</Form.Label>
-                  <Form.Control 
-                    as="textarea" 
-                    rows={4} 
-                    placeholder="Your message..." 
-                    required 
-                    aria-label="Enter your message" 
+                  <Form.Control
+                    as="textarea"
+                    name="message"
+                    rows={4}
+                    placeholder="Your message..."
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
                   />
                 </Form.Group>
 
-                <Button variant="primary" type="submit" aria-label="Send your message">Send Message</Button>
+                <Button variant="primary" type="submit">Send Message</Button>
               </Form>
             </div>
           </Col>
 
-          {/* Contact Info + Map */}
           <Col md={6}>
             <div className="p-4 shadow rounded bg-light">
               <h4>Store Address</h4>
               <p>FashionFlick Hub,<br />Coimbatore, Tamil Nadu, India</p>
 
               <h4>Email</h4>
-              <p>support@zudio.com</p>
+              <p>gokulhari182@gmaol.com</p>
 
               <h4>Phone</h4>
-              <p>+91 98765 43210</p>
+              <p>+91 7639019726</p>
 
               <h4 className="mt-4">Our Location</h4>
               <div className="map-responsive rounded overflow-hidden">
@@ -78,7 +138,6 @@ const ContactPage = () => {
                   allowFullScreen=""
                   aria-hidden="false"
                   tabIndex="0"
-                  aria-label="Google map showing FashionFlick Hub location in Coimbatore, Tamil Nadu, India"
                 ></iframe>
               </div>
             </div>

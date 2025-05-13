@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import "../Offer.css"
 const Offer = () => {
   const offers = [
@@ -39,10 +39,6 @@ const Offer = () => {
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>{offer.title}</Card.Title>
                   <Card.Text>{offer.text}</Card.Text>
-                  <div className="mt-auto d-flex justify-content-between">
-                    <Button variant="primary" aria-label="Shop Now">Shop Now</Button>
-                    {/* Removed "Add to Cart" functionality */}
-                  </div>
                 </Card.Body>
               </Card>
             </Col>

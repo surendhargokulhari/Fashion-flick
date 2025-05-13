@@ -62,6 +62,7 @@
 /* SECTION HEADERS */
 #products-h,
 #about-h,
+.Cart-h,
 #contact-h {
   background-image: linear-gradient( 111.1deg,  rgba(69,150,164,1) 2.5%, rgba(17,20,34,1) 100.3% );
 }
@@ -280,4 +281,28 @@ button[type="submit"]:hover {
   position: relative;
   display: flex;
   bottom: 2px;
+}
+
+.favorite-icon {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  width: 28px;
+  height: 28px;
+  background-color: white;
+  border-radius: 50%;
+  font-size: 25px;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: color 0.3s ease, background-color 0.3s ease;
+  z-index: 10;
+}
+
+.favorite-icon:hover {
+  color: red;
+  background-color: #f8f8f8;
 }
