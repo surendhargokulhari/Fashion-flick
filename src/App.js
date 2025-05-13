@@ -9,6 +9,7 @@ import AboutPage from "./components/About";
 import ContactPage from "./components/Contact";
 import Welcome from "./components/Welcome";
 import Cart from "./components/Cart";
+import ProductDetails from "./components/ProductDetails"; // Import ProductDetails component
 import { CartProvider } from "./context/CartContext";
 
 function App() {
@@ -23,9 +24,12 @@ function App() {
             path="/"
             element={
               <>
-                <Header setSearchTerm={setSearchTerm} scrollToProducts={() => {
-                  productRef.current?.scrollIntoView({ behavior: "smooth" });
-                }} />
+                <Header
+                  setSearchTerm={setSearchTerm}
+                  scrollToProducts={() => {
+                    productRef.current?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                />
                 <Welcome />
                 <HomePage />
                 <Products searchTerm={searchTerm} ref={productRef} />
@@ -35,6 +39,7 @@ function App() {
             }
           />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/product-details" element={<ProductDetails />} /> {/* Add ProductDetails Route */}
         </Routes>
         <Footer />
       </Router>

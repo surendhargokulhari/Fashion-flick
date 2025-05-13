@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext"; // make sure this context exists
+import { useCart } from "../context/CartContext"; 
 
 const products = [
   { id: 1, name: "T-Shirt", img: "https://img.freepik.com/premium-psd/flat-lay-realistic-t-shirt-mockup_185216-241.jpg", price: "₹299" },
@@ -20,7 +20,7 @@ const products = [
 
 const Products = ({ searchTerm }) => {
   const navigate = useNavigate();
-  const { addToCart } = useCart(); // from context
+  const { addToCart } = useCart();
 
   const [filteredProducts, setFilteredProducts] = useState(products);
 
@@ -39,6 +39,10 @@ const Products = ({ searchTerm }) => {
   const handleAddToCart = (product) => {
     addToCart(product); // 1. Add product to cart
     navigate("/cart"); // 2. Redirect to Cart page
+  };
+
+  const handleBuyNow = (product) => {
+    navigate("/product-details", { state: { product } }); // Navigate to ProductDetails with product data
   };
 
   return (
@@ -63,7 +67,12 @@ const Products = ({ searchTerm }) => {
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text">{product.price}</p>
                   <div className="d-flex justify-content-between">
-                    <button className="btn btn-grad">Buy Now</button>
+                    <button
+                      className="btn btn-grad"
+                      onClick={() => handleBuyNow(product)} // Buy Now action
+                    >
+                      Buy Now
+                    </button>
                     <button
                       className="btn btn-add"
                       aria-label={`Add ${product.name} to Cart`}
