@@ -25,18 +25,18 @@ const AboutPage = () => {
           <Col md={6}>
             <h2 className="text-primary">Who We Are</h2>
             <p>
-              Zudio is a youth-driven fashion destination under the Tata Group’s retail wing, Trent Ltd.
+              FashionFlick is a youth-driven fashion destination under the Tata Group’s retail wing, Trent Ltd.
               We aim to bring <strong>stylish and budget-friendly fashion</strong> to everyone.
             </p>
             <p>
-              Whether it's casuals, workwear, ethnic, or seasonal trends, Zudio caters to all styles—making fashion for everyone.
+              Whether it's casuals, workwear, ethnic, or seasonal trends, FashionFlick caters to all styles—making fashion for everyone.
             </p>
           </Col>
         </Row>
 
         <Row className="mb-5 bg-white rounded p-4 shadow-sm animate-fade-in">
           <Col md={12}>
-            <h2 className="text-success">What Makes Zudio Different?</h2>
+            <h2 className="text-success">What Makes FashionFlick Different?</h2>
             <ul className="colorful-list">
               <li><span role="img" aria-label="jacket">🧥</span> Weekly refreshed collections to stay on trend</li>
               <li><span role="img" aria-label="t-shirt">👕</span> Affordable pricing with top-notch quality</li>
