@@ -11,6 +11,7 @@ import Welcome from "./components/Welcome";
 import Cart from "./components/Cart";
 import ProductDetails from "./components/ProductDetails"; // Import ProductDetails component
 import { CartProvider } from "./context/CartContext";
+import PaymentPage from "./components/PaymentPage";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,6 +41,7 @@ function App() {
           />
           <Route path="/cart" element={<Cart />} />
           <Route path="/product-details" element={<ProductDetails />} /> {/* Add ProductDetails Route */}
+          <Route path="/checkout" element={<PaymentPage />} /> 
         </Routes>
         <Footer />
       </Router>
