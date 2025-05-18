@@ -13,7 +13,11 @@ const PaymentPage = () => {
     expiry: "",
     cvv: ""
   });
-  const [address, setAddress] = useState("");
+
+  const [doorNo, setDoorNo] = useState("");
+  const [city, setCity] = useState("");
+  const [pincode, setPincode] = useState("");
+  const [phone, setPhone] = useState("");
 
   if (!product || !selectedSize) {
     navigate("/");
@@ -26,8 +30,8 @@ const PaymentPage = () => {
       return;
     }
 
-    if (!address.trim()) {
-      alert("Please enter a delivery address.");
+    if (!doorNo.trim() || !city.trim() || !pincode.trim() || !phone.trim()) {
+      alert("Please fill in all delivery details.");
       return;
     }
 
@@ -44,32 +48,63 @@ const PaymentPage = () => {
       }
     }
 
-    alert("Payment Successful!");
+    alert("Payment Successful!\nDelivery To:\n" +
+      `${doorNo}, ${city}, ${pincode}\nPhone: ${phone}`);
     navigate("/");
   };
 
   const qrImage = `https://api.qrserver.com/v1/create-qr-code/?data=upi://pay?pa=7639019726@upi&pn=User&am=${product.price}&size=200x200`;
 
   return (
-    <div className="container mt-5">
-      <h2>Payment Page</h2>
+    <div className="container mt-5 ">
+      <h2 >Payment Page</h2>
       <div className="card p-4">
         <h4>{product.name}</h4>
         <p>Price: {product.price}</p>
         <p>Selected Size: {selectedSize}</p>
+        <p>Delivery to: {doorNo}, {city}, {pincode}</p>
+        <p>Phone: {phone}</p>
 
         <hr />
+        <h5>🏠 Delivery Address</h5>
         <div className="mb-3">
-          <label>🏠 Delivery Address:</label>
-          <textarea
+          <label>Door No. / Street:</label>
+          <input
+            type="text"
+            className="form-control mb-2"
+            value={doorNo}
+            onChange={(e) => setDoorNo(e.target.value)}
+            placeholder="e.g., 12/34 Main Street"
+          />
+          <label>City:</label>
+          <input
+            type="text"
+            className="form-control mb-2"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            placeholder="Enter city"
+          />
+          <label>Pincode:</label>
+          <input
+            type="text"
+            className="form-control mb-2"
+            maxLength="6"
+            value={pincode}
+            onChange={(e) => setPincode(e.target.value)}
+            placeholder="e.g., 641001"
+          />
+          <label>Phone Number:</label>
+          <input
+            type="text"
             className="form-control"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter your delivery address"
-            rows="3"
+            maxLength="10"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="e.g., 9876543210"
           />
         </div>
 
+        <hr />
         <p>💳 Choose a payment method:</p>
         <select
           className="form-select mb-3"

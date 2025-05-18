@@ -51,7 +51,7 @@ const Header = ({ searchTerm, setSearchTerm, scrollToProducts }) => {
               </Button>
             </Form>
 
-            <Nav.Link as={Link} to="/profile">👤 Profile</Nav.Link>
+            <Nav.Link as={Link} to="/Account">👤 Account</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
