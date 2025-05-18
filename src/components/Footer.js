@@ -24,7 +24,7 @@ const Footer = () => {
           <Col md={4}>
             <h5>Contact Us</h5>
             <p>Email: support@FashionFlick.com</p>
-            <p>Phone: +91 98765 43210</p>
+            <p>Phone: +91 76390 19726</p>
             <p>Address: Coimbatore, Tamil Nadu</p>
           </Col>
         </Row>
