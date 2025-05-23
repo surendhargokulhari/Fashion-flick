@@ -8,7 +8,7 @@ const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState("");
 
   if (!product) {
-    navigate("/");
+    navigate("/"); // Redirect to home if no product info
     return null;
   }
 
@@ -17,15 +17,10 @@ const ProductDetails = () => {
     const halfStar = rating % 1 !== 0;
     const stars = [];
 
-    for (let i = 0; i < fullStars; i++) {
-      stars.push("🌟");
-    }
-    if (halfStar) {
-      stars.push("⭐");
-    }
-    while (stars.length < 5) {
-      stars.push("☆");
-    }
+    for (let i = 0; i < fullStars; i++) stars.push("🌟");
+    if (halfStar) stars.push("⭐");
+    while (stars.length < 5) stars.push("☆");
+
     return stars.join(" ");
   };
 
@@ -38,31 +33,38 @@ const ProductDetails = () => {
       alert("Please select a size before placing the order.");
       return;
     }
-    navigate("/checkout", { state: { product, selectedSize } });
+
+    navigate("/checkout", {
+      state: { product, selectedSize },
+    });
   };
 
   return (
     <div className="product-details">
-      {/* Logo */}
-      <header className="bg-dark text-white text-center p-5 d-flex flex-column align-items-center">
-        <h1 className="mt-3">{product.name}</h1>
+      <header className="bg-dark text-white text-center p-5">
+        <h1>{product.name}</h1>
       </header>
 
       <div className="container mt-5">
         <div className="row">
           {/* Product Image */}
           <div className="col-md-6">
-            <img src={product.img} alt={product.name} className="img-fluid" />
+            <img
+              src={product.img}
+              alt={product.name}
+              className="img-fluid"
+              style={{ maxHeight: "400px" }}
+            />
           </div>
 
           {/* Product Info */}
           <div className="col-md-6">
             <h3>Price: {product.price}</h3>
 
-            {/* Product Overview */}
+            {/* Description */}
             <p>
-              <strong>Product Overview:</strong> This is a detailed description of
-              the {product.name}. (Add the full description here.)
+              <strong>Overview:</strong> This is a detailed description of{" "}
+              {product.name}. (You can customize this content.)
             </p>
 
             {/* Rating */}
@@ -73,7 +75,7 @@ const ProductDetails = () => {
               </span>
             </div>
 
-            {/* Size Selection */}
+            {/* Size Dropdown */}
             <div className="mt-3">
               <label htmlFor="size">Select Size:</label>
               <select
@@ -90,14 +92,14 @@ const ProductDetails = () => {
               </select>
             </div>
 
-            {/* Place Order */}
+            {/* Order Button */}
             <div className="mt-4">
               <button className="btn btn-grad" onClick={handlePlaceOrder}>
                 Place Order
               </button>
             </div>
 
-            {/* Additional Info */}
+            {/* Extra Info */}
             <div className="mt-4">
               <p>🚚 <strong>Free Shipping</strong> on all orders</p>
               <p>🔄 <strong>7 Days Exchange and Return</strong> available</p>

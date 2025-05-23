@@ -13,6 +13,7 @@ import ProductDetails from "./components/ProductDetails"; // Import ProductDetai
 import { CartProvider } from "./context/CartContext";
 import PaymentPage from "./components/PaymentPage";
 import Account from "./components/Account";
+import Orders from "./components/Orders";
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
           <Route path="/product-details" element={<ProductDetails />} /> {/* Add ProductDetails Route */}
           <Route path="/checkout" element={<PaymentPage />} /> 
           <Route path="/Account" element={<Account />} />
+          <Route path="/account/orders" element={<Orders />} />
         </Routes>
         <Footer />
       </Router>

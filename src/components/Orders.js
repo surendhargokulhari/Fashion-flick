@@ -1,0 +1,81 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const Orders = () => {
+  const [orders, setOrders] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+    setOrders(storedOrders);
+  }, []);
+
+  const handleCancelOrder = (index) => {
+    const updatedOrders = [...orders];
+    updatedOrders.splice(index, 1);
+    setOrders(updatedOrders);
+    localStorage.setItem("orders", JSON.stringify(updatedOrders));
+  };
+
+  return (
+    <div className="container mt-5">
+      <h2 className="text-center mb-4">Your Orders</h2>
+
+      {orders.length === 0 ? (
+        <>
+          <p>No orders yet.</p>
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate("/")}
+          >
+            Back to Shopping
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="row">
+            {orders.map((order, index) => (
+              <div className="col-md-4 mb-4" key={index}>
+                <div className="card h-100">
+                  <img
+                    src={order.img}
+                    alt={order.name}
+                    className="card-img-top"
+                    style={{ objectFit: "contain", height: "200px" }}
+                  />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title">{order.name}</h5>
+                    <p className="card-text">Price: {order.price}</p>
+                    <p className="card-text">Size: {order.selectedSize}</p>
+                    <p className="card-text">
+                      Ordered on:{" "}
+                      {new Date(order.date).toLocaleDateString(undefined, {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
+                    <button
+                      className="btn btn-danger mt-auto"
+                      onClick={() => handleCancelOrder(index)}
+                    >
+                      Cancel Order
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate("/")}
+          >
+            Back to Shopping
+          </button>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default Orders;

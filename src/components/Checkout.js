@@ -1,31 +1,42 @@
+// Checkout.js
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const Checkout = () => {
-  const location = useLocation();
+  const { state } = useLocation();
   const navigate = useNavigate();
-  const { product, selectedSize } = location.state || {};
+  const { product, selectedSize } = state || {};
 
   useEffect(() => {
-    if (product && selectedSize) {
+    if (!product || !selectedSize) {
+      navigate("/");
+      return;
+    }
+
+    const completePayment = () => {
       const newOrder = {
         ...product,
         size: selectedSize,
-        orderId: Date.now(),
-        orderDate: new Date().toLocaleString(),
+        date: new Date().toLocaleString(),
       };
 
-      const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
-      existingOrders.push(newOrder);
-      localStorage.setItem("orders", JSON.stringify(existingOrders));
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      orders.push(newOrder);
+      localStorage.setItem("orders", JSON.stringify(orders));
 
-      // Optional: clear cart, show success message, redirect to orders
-      alert("Order placed successfully!");
-      navigate("/orders");
-    }
+      navigate("/account/orders");
+    };
+
+    const timer = setTimeout(completePayment, 2000);
+    return () => clearTimeout(timer);
   }, [product, selectedSize, navigate]);
 
-  return null; // Optional: or a loading animation
+  return (
+    <div className="container mt-5 text-center">
+      <h2>Processing Payment...</h2>
+      <p>Please wait while we complete your order.</p>
+    </div>
+  );
 };
 
 export default Checkout;

@@ -48,22 +48,31 @@ const PaymentPage = () => {
       }
     }
 
-    alert("Payment Successful!\nDelivery To:\n" +
-      `${doorNo}, ${city}, ${pincode}\nPhone: ${phone}`);
-    navigate("/");
+    // Save order in localStorage
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+    const newOrder = {
+      ...product,
+      selectedSize,
+      address: { doorNo, city, pincode, phone },
+      paymentMethod,
+      date: new Date().toISOString(),
+    };
+    orders.push(newOrder);
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    // Redirect to Orders Page
+    navigate("/account/orders");
   };
 
   const qrImage = `https://api.qrserver.com/v1/create-qr-code/?data=upi://pay?pa=7639019726@upi&pn=User&am=${product.price}&size=200x200`;
 
   return (
-    <div className="container mt-5 ">
-      <h2 >Payment Page</h2>
+    <div className="container mt-5">
+      <h2>Payment Page</h2>
       <div className="card p-4">
         <h4>{product.name}</h4>
         <p>Price: {product.price}</p>
         <p>Selected Size: {selectedSize}</p>
-        <p>Delivery to: {doorNo}, {city}, {pincode}</p>
-        <p>Phone: {phone}</p>
 
         <hr />
         <h5>🏠 Delivery Address</h5>
