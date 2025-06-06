@@ -21,7 +21,7 @@ function App() {
   const productRef = useRef(null);
 
   return (
-    <CartProvider>
+    <CartProvider >
       <Router>
         <Routes>
           <Route
