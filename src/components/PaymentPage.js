@@ -24,7 +24,7 @@ const PaymentPage = () => {
     return null;
   }
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!doorNo || !city || !pincode || !phone) {
       alert("Please fill in all the address fields.");
       return;
@@ -56,8 +56,21 @@ const PaymentPage = () => {
       paymentMethod,
       date: new Date().toISOString()
     };
+
+    // Save to local storage
     orders.push(newOrder);
     localStorage.setItem("orders", JSON.stringify(orders));
+
+    // Save to MongoDB backend
+    try {
+      await fetch("https://fashion-backend-g6f0.onrender.com/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newOrder),
+      });
+    } catch (error) {
+      console.error("Failed to save order to backend:", error);
+    }
 
     alert("Payment successful! Redirecting to your orders...");
     navigate("/account/orders");
@@ -80,7 +93,6 @@ const PaymentPage = () => {
           <input
             type="text"
             className="form-control mb-2"
-            placeholder="e.g., 12/34 Main Street"
             value={doorNo}
             onChange={(e) => setDoorNo(e.target.value)}
           />
@@ -89,7 +101,6 @@ const PaymentPage = () => {
           <input
             type="text"
             className="form-control mb-2"
-            placeholder="e.g., Coimbatore"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
@@ -99,7 +110,6 @@ const PaymentPage = () => {
             type="text"
             className="form-control mb-2"
             maxLength="6"
-            placeholder="e.g., 641001"
             value={pincode}
             onChange={(e) => setPincode(e.target.value)}
           />
@@ -109,7 +119,6 @@ const PaymentPage = () => {
             type="text"
             className="form-control"
             maxLength="10"
-            placeholder="e.g., 9876543210"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
@@ -135,7 +144,6 @@ const PaymentPage = () => {
               type="text"
               className="form-control mb-2"
               maxLength="16"
-              placeholder="Enter 16-digit card number"
               value={cardDetails.number}
               onChange={(e) =>
                 setCardDetails({ ...cardDetails, number: e.target.value })
@@ -157,7 +165,6 @@ const PaymentPage = () => {
               type="password"
               className="form-control"
               maxLength="3"
-              placeholder="Enter CVV"
               value={cardDetails.cvv}
               onChange={(e) =>
                 setCardDetails({ ...cardDetails, cvv: e.target.value })
@@ -173,7 +180,6 @@ const PaymentPage = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="e.g., yourname@upi"
                 value={upiId}
                 onChange={(e) => setUpiId(e.target.value)}
               />

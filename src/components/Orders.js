@@ -5,6 +5,7 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
+  // Just fetch orders from localStorage (no backend sync here)
   useEffect(() => {
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
     setOrders(storedOrders);
@@ -24,10 +25,7 @@ const Orders = () => {
       {orders.length === 0 ? (
         <>
           <p>No orders yet.</p>
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate("/")}
-          >
+          <button className="btn btn-primary" onClick={() => navigate("/")}>
             Back to Shopping
           </button>
         </>
@@ -66,10 +64,7 @@ const Orders = () => {
               </div>
             ))}
           </div>
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate("/")}
-          >
+          <button className="btn btn-primary" onClick={() => navigate("/")}>
             Back to Shopping
           </button>
         </>
