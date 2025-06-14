@@ -63,7 +63,7 @@ const Orders = () => {
                   />
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{order.name}</h5>
-                    <p className="card-text">Price: ₹{order.price}</p>
+                    <p className="card-text">Price: {order.price}</p>
                     <p className="card-text">Size: {order.selectedSize}</p>
                     <p className="card-text">
                       Ordered on:{" "}
