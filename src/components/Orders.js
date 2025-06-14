@@ -5,17 +5,37 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
-  // Just fetch orders from localStorage (no backend sync here)
+  // Load orders from localStorage
   useEffect(() => {
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
     setOrders(storedOrders);
   }, []);
 
-  const handleCancelOrder = (index) => {
+  const handleCancelOrder = async (index) => {
+    const orderToCancel = orders[index];
+
+    // Update local state and localStorage
     const updatedOrders = [...orders];
     updatedOrders.splice(index, 1);
     setOrders(updatedOrders);
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
+
+    // If MongoDB _id exists, delete from backend
+    if (orderToCancel._id) {
+      try {
+        const res = await fetch(`http://localhost:5000/api/orders/${orderToCancel._id}`, {
+          method: "DELETE",
+        });
+
+        if (!res.ok) {
+          throw new Error("Server error during deletion");
+        }
+
+        console.log("✅ Order deleted from MongoDB");
+      } catch (error) {
+        console.error("❌ Failed to delete from MongoDB:", error);
+      }
+    }
   };
 
   return (
@@ -43,7 +63,7 @@ const Orders = () => {
                   />
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{order.name}</h5>
-                    <p className="card-text">Price: {order.price}</p>
+                    <p className="card-text">Price: ₹{order.price}</p>
                     <p className="card-text">Size: {order.selectedSize}</p>
                     <p className="card-text">
                       Ordered on:{" "}

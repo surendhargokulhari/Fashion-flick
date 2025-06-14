@@ -25,60 +25,60 @@ const PaymentPage = () => {
   }
 
   const handlePayment = async () => {
-    if (!doorNo || !city || !pincode || !phone) {
-      alert("Please fill in all the address fields.");
+  if (!doorNo || !city || !pincode || !phone) {
+    alert("Please fill in all the address fields.");
+    return;
+  }
+
+  if (!paymentMethod) {
+    alert("Please select a payment method.");
+    return;
+  }
+
+  if (paymentMethod === "UPI" && !upiId) {
+    alert("Please enter your UPI ID.");
+    return;
+  }
+
+  if (paymentMethod === "Card") {
+    const { number, expiry, cvv } = cardDetails;
+    if (!number || !expiry || !cvv) {
+      alert("Please fill in all the card details.");
       return;
     }
+  }
 
-    if (!paymentMethod) {
-      alert("Please select a payment method.");
-      return;
-    }
+  const newOrder = {
+    ...product,
+    selectedSize,
+    address: { doorNo, city, pincode, phone },
+    paymentMethod,
+    date: new Date().toISOString()
+  };
 
-    if (paymentMethod === "UPI" && !upiId) {
-      alert("Please enter your UPI ID.");
-      return;
-    }
+  try {
+    const response = await fetch("http://localhost:5000/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newOrder),
+    });
 
-    if (paymentMethod === "Card") {
-      const { number, expiry, cvv } = cardDetails;
-      if (!number || !expiry || !cvv) {
-        alert("Please fill in all the card details.");
-        return;
-      }
-    }
+    const result = await response.json();
+    console.log("Backend Response:", result);
 
+    // ✅ Save to localStorage with MongoDB _id
     const orders = JSON.parse(localStorage.getItem("orders")) || [];
-    const newOrder = {
-      ...product,
-      selectedSize,
-      address: { doorNo, city, pincode, phone },
-      paymentMethod,
-      date: new Date().toISOString()
-    };
-    orders.push(newOrder);
+    orders.push({ ...newOrder, _id: result._id }); // Store _id
     localStorage.setItem("orders", JSON.stringify(orders));
-
-    // ✅ Send to backend (MongoDB)
-// ✅ Send to backend (MongoDB)
-try {
-  const response = await fetch("http://localhost:5000/api/orders", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(newOrder),
-  });
-
-  const result = await response.json();
-  console.log("Backend Response:", result);
-} catch (error) {
-  console.error("Failed to store order in MongoDB:", error);
-}
-
-
 
     alert("Payment successful! Redirecting to your orders...");
     navigate("/account/orders");
-  };
+  } catch (error) {
+    console.error("Failed to store order in MongoDB:", error);
+    alert("Payment failed. Please try again.");
+  }
+};
+
 
   const qrImage = `https://api.qrserver.com/v1/create-qr-code/?data=upi://pay?pa=7639019726@upi&pn=User&am=${product.price}&size=200x200`;
 
