@@ -14,16 +14,16 @@ const Orders = () => {
   const handleCancelOrder = async (index) => {
     const orderToCancel = orders[index];
 
-    // Update local state and localStorage
+    // Optimistically update local state and localStorage
     const updatedOrders = [...orders];
     updatedOrders.splice(index, 1);
     setOrders(updatedOrders);
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
 
-    // If MongoDB _id exists, delete from backend
+    // Delete from MongoDB if it has a _id
     if (orderToCancel._id) {
       try {
-        const res = await fetch(`http://localhost:5000/api/orders/${orderToCancel._id}`, {
+        const res = await fetch(`https://fashion-backend-yvih.onrender.com/api/orders/${orderToCancel._id}`, {
           method: "DELETE",
         });
 
@@ -32,8 +32,10 @@ const Orders = () => {
         }
 
         console.log("✅ Order deleted from MongoDB");
+        alert("Order cancelled successfully!");
       } catch (error) {
         console.error("❌ Failed to delete from MongoDB:", error);
+        alert("Failed to cancel order from server.");
       }
     }
   };
@@ -63,7 +65,7 @@ const Orders = () => {
                   />
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{order.name}</h5>
-                    <p className="card-text">Price: {order.price}</p>
+                    <p className="card-text">Price: ₹{order.price}</p>
                     <p className="card-text">Size: {order.selectedSize}</p>
                     <p className="card-text">
                       Ordered on:{" "}
