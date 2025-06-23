@@ -19,6 +19,7 @@ const PaymentPage = () => {
   const [pincode, setPincode] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false); // 👈 New loading state
 
   useEffect(() => {
     if (!product || !selectedSize) {
@@ -66,6 +67,7 @@ const PaymentPage = () => {
     };
 
     try {
+      setIsLoading(true); // 👈 Start loading
       const response = await fetch("https://fashion-backend-yvih.onrender.com/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,6 +84,8 @@ const PaymentPage = () => {
     } catch (error) {
       console.error("Failed to store order in MongoDB:", error);
       alert("Payment failed. Please try again.");
+    } finally {
+      setIsLoading(false); // 👈 End loading
     }
   };
 
@@ -219,8 +223,12 @@ const PaymentPage = () => {
           </>
         )}
 
-        <button className="btn btn-success mt-3 w-100" onClick={handlePayment}>
-          💳 Pay Now
+        <button
+          className="btn btn-success mt-3 w-100"
+          onClick={handlePayment}
+          disabled={isLoading}
+        >
+          {isLoading ? "Processing..." : "💳 Pay Now"}
         </button>
       </div>
     </div>
