@@ -19,7 +19,7 @@ const PaymentPage = () => {
   const [pincode, setPincode] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false); // 👈 New loading state
+  const [isLoading, setIsLoading] = useState(false); // 👈 Loading state
 
   useEffect(() => {
     if (!product || !selectedSize) {
@@ -96,142 +96,163 @@ const PaymentPage = () => {
   if (!product || !selectedSize) return null;
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4">💰 Payment Page</h2>
-      <div className="card shadow p-4">
-        <h4>{product.name}</h4>
-        <p>Price: {product.price}</p>
-        <p>Selected Size: {selectedSize}</p>
-
-        <hr />
-        <h5 className="mb-3">🏠 Delivery Address</h5>
-
-        <div className="mb-3">
-          <label className="form-label">Door No. / Street:</label>
-          <input
-            type="text"
-            className={`form-control mb-2 ${errors.doorNo ? "is-invalid" : ""}`}
-            placeholder="e.g., 12/34 Main Street"
-            value={doorNo}
-            onChange={(e) => setDoorNo(e.target.value)}
-          />
-          {errors.doorNo && <div className="invalid-feedback">{errors.doorNo}</div>}
-
-          <label className="form-label">City:</label>
-          <input
-            type="text"
-            className={`form-control mb-2 ${errors.city ? "is-invalid" : ""}`}
-            placeholder="e.g., Coimbatore"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-          {errors.city && <div className="invalid-feedback">{errors.city}</div>}
-
-          <label className="form-label">Pincode:</label>
-          <input
-            type="text"
-            className={`form-control mb-2 ${errors.pincode ? "is-invalid" : ""}`}
-            maxLength="6"
-            placeholder="e.g., 641001"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-          />
-          {errors.pincode && <div className="invalid-feedback">{errors.pincode}</div>}
-
-          <label className="form-label">Phone Number:</label>
-          <input
-            type="text"
-            className={`form-control ${errors.phone ? "is-invalid" : ""}`}
-            maxLength="10"
-            placeholder="e.g., 9876543210"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
-        </div>
-
-        <hr />
-        <p className="mb-2">💳 Choose a payment method:</p>
-        <select
-          className="form-select mb-3"
-          value={paymentMethod}
-          onChange={(e) => setPaymentMethod(e.target.value)}
+    <>
+      {isLoading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            padding: "10px",
+            backgroundColor: "#ffc107",
+            color: "#000",
+            textAlign: "center",
+            zIndex: 9999,
+            fontWeight: "bold"
+          }}
         >
-          <option value="">-- Select Payment Method --</option>
-          <option value="Card">Credit/Debit Card</option>
-          <option value="UPI">UPI</option>
-          <option value="COD">Cash on Delivery</option>
-        </select>
+          🔄 Processing your payment, please wait...
+        </div>
+      )}
 
-        {paymentMethod === "Card" && (
+      <div className="container mt-5">
+        <h2 className="mb-4">💰 Payment Page</h2>
+        <div className="card shadow p-4">
+          <h4>{product.name}</h4>
+          <p>Price: {product.price}</p>
+          <p>Selected Size: {selectedSize}</p>
+
+          <hr />
+          <h5 className="mb-3">🏠 Delivery Address</h5>
+
           <div className="mb-3">
-            <label className="form-label">Card Number:</label>
+            <label className="form-label">Door No. / Street:</label>
             <input
               type="text"
-              className="form-control mb-2"
-              maxLength="16"
-              placeholder="Enter 16-digit card number"
-              value={cardDetails.number}
-              onChange={(e) =>
-                setCardDetails({ ...cardDetails, number: e.target.value })
-              }
+              className={`form-control mb-2 ${errors.doorNo ? "is-invalid" : ""}`}
+              placeholder="e.g., 12/34 Main Street"
+              value={doorNo}
+              onChange={(e) => setDoorNo(e.target.value)}
             />
+            {errors.doorNo && <div className="invalid-feedback">{errors.doorNo}</div>}
 
-            <label className="form-label">Expiry Date:</label>
+            <label className="form-label">City:</label>
             <input
-              type="month"
-              className="form-control mb-2"
-              value={cardDetails.expiry}
-              onChange={(e) =>
-                setCardDetails({ ...cardDetails, expiry: e.target.value })
-              }
+              type="text"
+              className={`form-control mb-2 ${errors.city ? "is-invalid" : ""}`}
+              placeholder="e.g., Coimbatore"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
             />
+            {errors.city && <div className="invalid-feedback">{errors.city}</div>}
 
-            <label className="form-label">CVV:</label>
+            <label className="form-label">Pincode:</label>
             <input
-              type="password"
-              className="form-control"
-              maxLength="3"
-              placeholder="Enter CVV"
-              value={cardDetails.cvv}
-              onChange={(e) =>
-                setCardDetails({ ...cardDetails, cvv: e.target.value })
-              }
+              type="text"
+              className={`form-control mb-2 ${errors.pincode ? "is-invalid" : ""}`}
+              maxLength="6"
+              placeholder="e.g., 641001"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
             />
+            {errors.pincode && <div className="invalid-feedback">{errors.pincode}</div>}
+
+            <label className="form-label">Phone Number:</label>
+            <input
+              type="text"
+              className={`form-control ${errors.phone ? "is-invalid" : ""}`}
+              maxLength="10"
+              placeholder="e.g., 9876543210"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
           </div>
-        )}
 
-        {paymentMethod === "UPI" && (
-          <>
+          <hr />
+          <p className="mb-2">💳 Choose a payment method:</p>
+          <select
+            className="form-select mb-3"
+            value={paymentMethod}
+            onChange={(e) => setPaymentMethod(e.target.value)}
+          >
+            <option value="">-- Select Payment Method --</option>
+            <option value="Card">Credit/Debit Card</option>
+            <option value="UPI">UPI</option>
+            <option value="COD">Cash on Delivery</option>
+          </select>
+
+          {paymentMethod === "Card" && (
             <div className="mb-3">
-              <label className="form-label">UPI ID:</label>
+              <label className="form-label">Card Number:</label>
               <input
                 type="text"
+                className="form-control mb-2"
+                maxLength="16"
+                placeholder="Enter 16-digit card number"
+                value={cardDetails.number}
+                onChange={(e) =>
+                  setCardDetails({ ...cardDetails, number: e.target.value })
+                }
+              />
+
+              <label className="form-label">Expiry Date:</label>
+              <input
+                type="month"
+                className="form-control mb-2"
+                value={cardDetails.expiry}
+                onChange={(e) =>
+                  setCardDetails({ ...cardDetails, expiry: e.target.value })
+                }
+              />
+
+              <label className="form-label">CVV:</label>
+              <input
+                type="password"
                 className="form-control"
-                placeholder="e.g., yourname@upi"
-                value={upiId}
-                onChange={(e) => setUpiId(e.target.value)}
+                maxLength="3"
+                placeholder="Enter CVV"
+                value={cardDetails.cvv}
+                onChange={(e) =>
+                  setCardDetails({ ...cardDetails, cvv: e.target.value })
+                }
               />
             </div>
-            <div className="mb-3">
-              <label className="form-label">Scan to Pay:</label>
-              <div>
-                <img src={qrImage} alt="QR Code" />
-                <p className="text-muted">Scan with any UPI app</p>
-              </div>
-            </div>
-          </>
-        )}
+          )}
 
-        <button
-          className="btn btn-success mt-3 w-100"
-          onClick={handlePayment}
-          disabled={isLoading}
-        >
-          {isLoading ? "Processing..." : "💳 Pay Now"}
-        </button>
+          {paymentMethod === "UPI" && (
+            <>
+              <div className="mb-3">
+                <label className="form-label">UPI ID:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g., yourname@upi"
+                  value={upiId}
+                  onChange={(e) => setUpiId(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Scan to Pay:</label>
+                <div>
+                  <img src={qrImage} alt="QR Code" />
+                  <p className="text-muted">Scan with any UPI app</p>
+                </div>
+              </div>
+            </>
+          )}
+
+          <button
+            className="btn btn-success mt-3 w-100"
+            onClick={handlePayment}
+            disabled={isLoading}
+          >
+            {isLoading ? "Processing..." : "💳 Pay Now"}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
