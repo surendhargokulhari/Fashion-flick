@@ -33,10 +33,15 @@ const Orders = () => {
 
         console.log("✅ Order deleted from MongoDB");
         alert("Order cancelled successfully!");
+        window.location.reload(); // Reloads the page after successful cancel
       } catch (error) {
         console.error("❌ Failed to delete from MongoDB:", error);
         alert("Failed to cancel order from server.");
       }
+    } else {
+      // For orders without _id (not in DB), just show success message
+      alert("Order cancelled successfully!");
+      window.location.reload(); // Reload for consistency
     }
   };
 
