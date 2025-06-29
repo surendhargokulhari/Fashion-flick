@@ -3,29 +3,33 @@ import { useNavigate } from "react-router-dom";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true); // ✅ Track loading
   const navigate = useNavigate();
 
-  // Load orders from localStorage
   useEffect(() => {
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
     setOrders(storedOrders);
+    setLoading(false); // ✅ Set loading to false after data is fetched
   }, []);
 
   const handleCancelOrder = async (index) => {
+    if (loading) return; // ✅ Prevent action if still loading
+
     const orderToCancel = orders[index];
 
-    // Optimistically update local state and localStorage
     const updatedOrders = [...orders];
     updatedOrders.splice(index, 1);
     setOrders(updatedOrders);
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
 
-    // Delete from MongoDB if it has a _id
     if (orderToCancel._id) {
       try {
-        const res = await fetch(`https://fashion-backend-yvih.onrender.com/api/orders/${orderToCancel._id}`, {
-          method: "DELETE",
-        });
+        const res = await fetch(
+          `https://fashion-backend-yvih.onrender.com/api/orders/${orderToCancel._id}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Server error during deletion");
@@ -33,15 +37,10 @@ const Orders = () => {
 
         console.log("✅ Order deleted from MongoDB");
         alert("Order cancelled successfully!");
-        window.location.reload(); // Reloads the page after successful cancel
       } catch (error) {
         console.error("❌ Failed to delete from MongoDB:", error);
         alert("Failed to cancel order from server.");
       }
-    } else {
-      // For orders without _id (not in DB), just show success message
-      alert("Order cancelled successfully!");
-      window.location.reload(); // Reload for consistency
     }
   };
 
@@ -49,7 +48,9 @@ const Orders = () => {
     <div className="container mt-5">
       <h2 className="text-center mb-4">Your Orders</h2>
 
-      {orders.length === 0 ? (
+      {loading ? (
+        <div className="text-center">Loading orders...</div> // ✅ Loading UI
+      ) : orders.length === 0 ? (
         <>
           <p>No orders yet.</p>
           <button className="btn btn-primary" onClick={() => navigate("/")}>
@@ -83,6 +84,7 @@ const Orders = () => {
                     <button
                       className="btn btn-danger mt-auto"
                       onClick={() => handleCancelOrder(index)}
+                      disabled={loading} // ✅ Disable if loading
                     >
                       Cancel Order
                     </button>
